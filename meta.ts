@@ -48,6 +48,12 @@ export const vendors: Record<string, VendorSkillMeta> = {
       turborepo: 'turborepo',
     },
   },
+  'web-design-guidelines': {
+    source: 'https://github.com/vercel-labs/agent-skills',
+    skills: {
+      'web-design-guidelines': 'web-design-guidelines',
+    },
+  },
 }
 
 /**
