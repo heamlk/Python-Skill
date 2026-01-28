@@ -36,6 +36,9 @@ You don't need to do anything about them unless being asked.
 ```
 .
 ├── meta.ts                     # Project metadata (repos & URLs)
+├── instructions/               # Instructions for generating skills
+│   └── {project}.md            # Instructions for generating skills for {project}
+│ 
 ├── sources/                    # Type 1: OSS repos (generate from docs)
 │   └── {project}/
 │       └── docs/               # Read documentation from here

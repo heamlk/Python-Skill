@@ -4,7 +4,7 @@ import { dirname, join } from 'node:path'
 import process from 'node:process'
 import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
-import { submodules, vendors } from '../meta'
+import { manual, submodules, vendors } from '../meta'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -32,6 +32,27 @@ function submoduleExists(path: string): boolean {
     return false
   const content = readFileSync(gitmodules, 'utf-8')
   return content.includes(`path = ${path}`)
+}
+
+function getExistingSubmodulePaths(): string[] {
+  const gitmodules = join(root, '.gitmodules')
+  if (!existsSync(gitmodules))
+    return []
+  const content = readFileSync(gitmodules, 'utf-8')
+  const matches = content.matchAll(/path\s*=\s*(.+)/g)
+  return Array.from(matches, match => match[1].trim())
+}
+
+function removeSubmodule(submodulePath: string): void {
+  // Deinitialize the submodule
+  execSafe(`git submodule deinit -f ${submodulePath}`)
+  // Remove from .git/modules
+  const gitModulesPath = join(root, '.git', 'modules', submodulePath)
+  if (existsSync(gitModulesPath)) {
+    rmSync(gitModulesPath, { recursive: true })
+  }
+  // Remove from working tree and .gitmodules
+  exec(`git rm -f ${submodulePath}`)
 }
 
 interface Project {
@@ -62,6 +83,43 @@ async function initSubmodules() {
     })),
   ]
 
+  const spinner = p.spinner()
+
+  // Check for extra submodules that are not in meta.ts
+  const existingSubmodulePaths = getExistingSubmodulePaths()
+  const expectedPaths = new Set(allProjects.map(p => p.path))
+  const extraSubmodules = existingSubmodulePaths.filter(path => !expectedPaths.has(path))
+
+  if (extraSubmodules.length > 0) {
+    p.log.warn(`Found ${extraSubmodules.length} submodule(s) not in meta.ts:`)
+    for (const path of extraSubmodules) {
+      p.log.message(`  - ${path}`)
+    }
+
+    const shouldRemove = await p.confirm({
+      message: 'Remove these extra submodules?',
+      initialValue: true,
+    })
+
+    if (p.isCancel(shouldRemove)) {
+      p.cancel('Cancelled')
+      return
+    }
+
+    if (shouldRemove) {
+      for (const submodulePath of extraSubmodules) {
+        spinner.start(`Removing submodule: ${submodulePath}`)
+        try {
+          removeSubmodule(submodulePath)
+          spinner.stop(`Removed: ${submodulePath}`)
+        }
+        catch (e) {
+          spinner.stop(`Failed to remove ${submodulePath}: ${e}`)
+        }
+      }
+    }
+  }
+
   const existingProjects = allProjects.filter(p => submoduleExists(p.path))
   const newProjects = allProjects.filter(p => !submoduleExists(p.path))
 
@@ -84,8 +142,6 @@ async function initSubmodules() {
     p.cancel('Cancelled')
     return
   }
-
-  const spinner = p.spinner()
 
   for (const project of selected as Project[]) {
     spinner.start(`Adding submodule: ${project.name}`)
@@ -261,6 +317,139 @@ async function checkUpdates() {
   }
 }
 
+function getExpectedSkillNames(): Set<string> {
+  const expected = new Set<string>()
+
+  // Skills from submodules (generated skills use same name as submodule key)
+  for (const name of Object.keys(submodules)) {
+    expected.add(name)
+  }
+
+  // Skills from vendors (use the output skill name)
+  for (const config of Object.values(vendors)) {
+    const vendorConfig = config as VendorConfig
+    for (const outputName of Object.values(vendorConfig.skills)) {
+      expected.add(outputName)
+    }
+  }
+
+  // Manual skills
+  for (const name of manual) {
+    expected.add(name)
+  }
+
+  return expected
+}
+
+function getExistingSkillNames(): string[] {
+  const skillsDir = join(root, 'skills')
+  if (!existsSync(skillsDir))
+    return []
+
+  return readdirSync(skillsDir, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .map(entry => entry.name)
+}
+
+async function cleanup() {
+  const spinner = p.spinner()
+  let hasChanges = false
+
+  // 1. Find and remove extra submodules
+  const allProjects: Project[] = [
+    ...Object.entries(submodules).map(([name, url]) => ({
+      name,
+      url,
+      type: 'source' as const,
+      path: `sources/${name}`,
+    })),
+    ...Object.entries(vendors).map(([name, config]) => ({
+      name,
+      url: (config as VendorConfig).source,
+      type: 'vendor' as const,
+      path: `vendor/${name}`,
+    })),
+  ]
+
+  const existingSubmodulePaths = getExistingSubmodulePaths()
+  const expectedSubmodulePaths = new Set(allProjects.map(p => p.path))
+  const extraSubmodules = existingSubmodulePaths.filter(path => !expectedSubmodulePaths.has(path))
+
+  if (extraSubmodules.length > 0) {
+    p.log.warn(`Found ${extraSubmodules.length} submodule(s) not in meta.ts:`)
+    for (const path of extraSubmodules) {
+      p.log.message(`  - ${path}`)
+    }
+
+    const shouldRemove = await p.confirm({
+      message: 'Remove these extra submodules?',
+      initialValue: true,
+    })
+
+    if (p.isCancel(shouldRemove)) {
+      p.cancel('Cancelled')
+      return
+    }
+
+    if (shouldRemove) {
+      hasChanges = true
+      for (const submodulePath of extraSubmodules) {
+        spinner.start(`Removing submodule: ${submodulePath}`)
+        try {
+          removeSubmodule(submodulePath)
+          spinner.stop(`Removed: ${submodulePath}`)
+        }
+        catch (e) {
+          spinner.stop(`Failed to remove ${submodulePath}: ${e}`)
+        }
+      }
+    }
+  }
+
+  // 2. Find and remove extra skills
+  const existingSkills = getExistingSkillNames()
+  const expectedSkills = getExpectedSkillNames()
+  const extraSkills = existingSkills.filter(name => !expectedSkills.has(name))
+
+  if (extraSkills.length > 0) {
+    p.log.warn(`Found ${extraSkills.length} skill(s) not in meta.ts:`)
+    for (const name of extraSkills) {
+      p.log.message(`  - skills/${name}`)
+    }
+
+    const shouldRemove = await p.confirm({
+      message: 'Remove these extra skills?',
+      initialValue: true,
+    })
+
+    if (p.isCancel(shouldRemove)) {
+      p.cancel('Cancelled')
+      return
+    }
+
+    if (shouldRemove) {
+      hasChanges = true
+      for (const skillName of extraSkills) {
+        spinner.start(`Removing skill: ${skillName}`)
+        try {
+          rmSync(join(root, 'skills', skillName), { recursive: true })
+          spinner.stop(`Removed: skills/${skillName}`)
+        }
+        catch (e) {
+          spinner.stop(`Failed to remove skills/${skillName}: ${e}`)
+        }
+      }
+    }
+  }
+
+  if (!hasChanges && extraSubmodules.length === 0 && extraSkills.length === 0) {
+    p.log.success('Everything is clean, no unused submodules or skills found')
+  }
+  else if (hasChanges) {
+    p.log.success('Cleanup completed')
+  }
+}
+
 async function main() {
   const [command] = process.argv.slice(2)
 
@@ -286,6 +475,13 @@ async function main() {
     return
   }
 
+  if (command === 'cleanup') {
+    p.intro('Skills Manager - Cleanup')
+    await cleanup()
+    p.outro('Done')
+    return
+  }
+
   // No subcommand: show interactive menu
   p.intro('Skills Manager')
 
@@ -295,6 +491,7 @@ async function main() {
       { value: 'sync', label: 'Sync submodules', hint: 'Pull latest and sync Type 2 skills' },
       { value: 'init', label: 'Init submodules', hint: 'Add new submodules' },
       { value: 'check', label: 'Check updates', hint: 'See available updates' },
+      { value: 'cleanup', label: 'Cleanup', hint: 'Remove unused submodules and skills' },
     ],
   })
 
@@ -312,6 +509,9 @@ async function main() {
       break
     case 'check':
       await checkUpdates()
+      break
+    case 'cleanup':
+      await cleanup()
       break
   }
 

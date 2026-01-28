@@ -24,7 +24,7 @@ Manually maintained by Anthony Fu with his preferred tools, setup conventions, a
 
 | Skill | Description |
 |-------|-------------|
-| [antfu](skills/antfu) | Anthony Fu's preferences and best practices for app/library projects (eslint, pnpm, tsdown, Vue, Nuxt, Vite) |
+| [antfu](skills/antfu) | Anthony Fu's preferences and best practices for app/library projects (eslint, pnpm, vitest, vue, etc.) |
 
 ### Skills Generated from Official Documentation
 
@@ -50,8 +50,23 @@ Synced from external repositories for convenient installation.
 | [slidev](skills/slidev) | Slidev - presentation slides for developers | [slidevjs/slidev](https://github.com/slidevjs/slidev) (Official) |
 | [vueuse](skills/vueuse) | VueUse - 200+ Vue composition utilities | [vueuse/skills](https://github.com/vueuse/skills) (Official) |
 | [vue-best-practices](skills/vue-best-practices) | Vue 3 + TypeScript best practices for Volar | [hyf0/vue-skills](https://github.com/hyf0/vue-skills) |
-| [turborepo](skills/turborepo) | Turborepo - high-performance build system for monorepos | [vercel/turborepo](https://github.com/vercel/turborepo) |
+| [turborepo](skills/turborepo) | Turborepo - high-performance build system for monorepos | [vercel/turborepo](https://github.com/vercel/turborepo) (Official) |
 | [web-design-guidelines](skills/web-design-guidelines) | Web design guidelines for building beautiful interfaces | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) |
+
+
+## Use this Project to Generate Your Own Skills
+
+If you want to generate your own skill sets like this, you can use this project as a template.
+
+1. Fork or clone this repository
+2. Install dependencies: `pnpm install`
+3. Update `meta.ts` to add your own projects and skills.
+4. Run `nr sync cleanup` to remove the existing submodules and skills.
+5. Run `nr sync init` to clone the submodules.
+6. Run `nr sync sync` to sync the vendored skills.
+7. Use your agent to ask "generate skills for <project>" to generate the skills. It's recommended to do it one-by-one as this might consume quite a lot of tokens.
+
+See [AGENTS.md](AGENTS.md) for detailed generation guidelines.
 
 ## License
 

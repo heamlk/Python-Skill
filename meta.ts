@@ -43,6 +43,7 @@ export const vendors: Record<string, VendorSkillMeta> = {
     },
   },
   'turborepo': {
+    official: true,
     source: 'https://github.com/vercel/turborepo',
     skills: {
       turborepo: 'turborepo',
