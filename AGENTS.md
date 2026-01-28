@@ -23,6 +23,12 @@ For projects that **already maintain their own skills**. We clone their repo as 
 - **Source:** `vendor/{project}/skills/{skill-name}/`
 - **Config:** Each vendor specifies which skills to sync and their output names in `meta.ts`
 
+### Type 3: Hand-written Skills
+
+For skills that are written by Anthony Fu with his preferences, experience, tastes and best practices.
+
+You don't need to do anything about them unless being asked.
+
 ## Repository Structure
 
 ```
@@ -74,7 +80,8 @@ For projects that **already maintain their own skills**. We clone their repo as 
    git diff {old-sha}..HEAD -- docs/
    ```
 2. **Update** affected skill files based on changes
-3. **Update** `GENERATION.md` with new SHA
+3. **Update** `SKILL.md` with the new version of the tool/project and skills table.
+4. **Update** `GENERATION.md` with new SHA
 
 ### For Synced Skills (Type 2)
 
@@ -103,6 +110,8 @@ Index file listing all skills with brief descriptions:
 
 The version should be the date of the last sync.
 
+Also record the version of the tool/project when the skills were generated.
+
 ```markdown
 ---
 name: {name}
@@ -112,6 +121,8 @@ metadata:
   version: "2025.1.1"
   source: Generated from {source-url}, scripts located at https://github.com/antfu/skills
 ---
+
+> The skill is based on {project} v{version}, generated at {date}.
 
 // Some concise summary/context/introduction of the project
 

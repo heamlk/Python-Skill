@@ -28,3 +28,6 @@
 [submodule "sources/pnpm"]
 	path = sources/pnpm
 	url = https://github.com/pnpm/pnpm.io
+[submodule "sources/vitepress"]
+	path = sources/vitepress
+	url = https://github.com/vuejs/vitepress

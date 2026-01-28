@@ -15,6 +15,7 @@ export const submodules = {
   'pnpm': 'https://github.com/pnpm/pnpm.io',
   'tsdown': 'https://github.com/rolldown/tsdown',
   'vitest': 'https://github.com/vitest-dev/vitest',
+  'vitepress': 'https://github.com/vuejs/vitepress',
 }
 
 /**
