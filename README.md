@@ -12,6 +12,12 @@ A curated collection of [agent skills](https://agentskills.io/home) reflecting [
 pnpx skills add antfu/skills --all
 ```
 
+To install it globally:
+
+```bash
+pnpx skills add antfu/skills --all -g
+```
+
 Learn more about CLI usage at [skills](https://github.com/vercel-labs/skills).
 
 ## Skills
