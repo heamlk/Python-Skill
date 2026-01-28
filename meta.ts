@@ -34,7 +34,7 @@ export const vendors: Record<string, VendorSkillMeta> = {
     official: true,
     source: 'https://github.com/vueuse/skills',
     skills: {
-      'vueuse-functions': 'vueuse',
+      'vueuse-functions': 'vueuse-functions',
     },
   },
   'vue-best-practices': {

@@ -1,10 +1,10 @@
 # Anthony Fu's Skills
 
-A curated collection of [agent skills](https://agentskills.io/home) reflecting [Anthony Fu](https://github.com/antfu)'s preferences, experience, and best practices for modern web development.
+A curated collection of [Agent Skills](https://agentskills.io/home) reflecting [Anthony Fu](https://github.com/antfu)'s preferences, experience, and best practices for modern web development.
 
 > [!IMPORTANT]
 > This is a proof-of-concept project for generating agent skills from source documentation and keeping them in sync.
-> I haven't fully tested how well the skills perform in practice, so feedback and contributions are welcome.
+> I haven't fully tested how well the skills perform in practice, so feedback and contributions are greatly welcome.
 
 ## Installation
 
@@ -12,13 +12,13 @@ A curated collection of [agent skills](https://agentskills.io/home) reflecting [
 pnpx skills add antfu/skills --all
 ```
 
-To install it globally:
+or to install it globally:
 
 ```bash
 pnpx skills add antfu/skills --all -g
 ```
 
-Learn more about CLI usage at [skills](https://github.com/vercel-labs/skills).
+Learn more about the CLI usage at [skills](https://github.com/vercel-labs/skills).
 
 ## Skills
 
@@ -54,10 +54,10 @@ Synced from external repositories that maintain their own skills.
 
 | Skill | Description | Source |
 |-------|-------------|--------|
-| [slidev](skills/slidev) | Slidev - presentation slides for developers | [slidevjs/slidev](https://github.com/slidevjs/slidev) (Official) |
-| [vueuse](skills/vueuse) | VueUse - 200+ Vue composition utilities | [vueuse/skills](https://github.com/vueuse/skills) (Official) |
+| [slidev](skills/slidev) (Official) | Slidev - presentation slides for developers | [slidevjs/slidev](https://github.com/slidevjs/slidev) |
+| [vueuse-functions](skills/vueuse-functions) (Official) | VueUse - 200+ Vue composition utilities | [vueuse/skills](https://github.com/vueuse/skills) |
+| [turborepo](skills/turborepo) (Official) | Turborepo - high-performance build system for monorepos | [vercel/turborepo](https://github.com/vercel/turborepo) |
 | [vue-best-practices](skills/vue-best-practices) | Vue 3 + TypeScript best practices for Volar | [hyf0/vue-skills](https://github.com/hyf0/vue-skills) |
-| [turborepo](skills/turborepo) | Turborepo - high-performance build system for monorepos | [vercel/turborepo](https://github.com/vercel/turborepo) (Official) |
 | [web-design-guidelines](skills/web-design-guidelines) | Web design guidelines for building beautiful interfaces | [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills) |
 
 ## What Makes This Collection Different?
