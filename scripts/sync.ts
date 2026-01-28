@@ -3,7 +3,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, write
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
-import { vendor, submodules } from '../meta'
+import { vendors, submodules } from '../meta'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -53,7 +53,7 @@ async function initSubmodules() {
       type: 'source' as const,
       path: `sources/${name}`,
     })),
-    ...Object.entries(vendor).map(([name, config]) => ({
+    ...Object.entries(vendors).map(([name, config]) => ({
       name,
       url: (config as VendorConfig).source,
       type: 'vendor' as const,
@@ -126,7 +126,7 @@ async function syncSubmodules() {
   }
 
   // Sync Type 2 skills
-  for (const [vendorName, config] of Object.entries(vendor)) {
+  for (const [vendorName, config] of Object.entries(vendors)) {
     const vendorConfig = config as VendorConfig
     const vendorPath = join(root, 'vendor', vendorName)
     const vendorSkillsPath = join(vendorPath, 'skills')
@@ -236,7 +236,7 @@ async function checkUpdates() {
   }
 
   // Check vendors
-  for (const [name, config] of Object.entries(vendor)) {
+  for (const [name, config] of Object.entries(vendors)) {
     const vendorConfig = config as VendorConfig
     const path = join(root, 'vendor', name)
     if (!existsSync(path))

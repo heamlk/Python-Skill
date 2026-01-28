@@ -1,0 +1,2 @@
+- Prefer using TypeScript over JavaScript.
+- Prefer using `vite.config.ts` for config file.

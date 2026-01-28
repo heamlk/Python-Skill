@@ -1,10 +1,6 @@
 # Skills Generator
 
-Generate Claude Code skills from project documentation with Anthony Fu's preferences.
-
-## What Are Skills?
-
-Skills are markdown files that help LLM agents understand tools and frameworks. See: https://code.claude.com/docs/en/skills
+Generate [Agent Skills](https://agentskills.io/home) from project documentation with Anthony Fu's preferences.
 
 ## Skill Source Types
 
@@ -56,13 +52,19 @@ For projects that **already maintain their own skills**. We clone their repo as 
 
 ### For Generated Skills (Type 1)
 
+#### General Instructions for Generation
+
+- Focus on agents capabilities and practical usage patterns. For user-facing guides, introductions, get-started, or common knowledge that LLM agents already know, you can skip those content.
+- Categorize each references into `core`, `features`, `best-practices`, `advanced`, etc categories, and prefix the reference file name with the category. For each feature field, feel free to create more categories if needed to better organize the content.
+
 #### Creating New Skills
 
-1. **Read** source docs from `sources/{project}/docs/`
-2. **Understand** the documentation thoroughly
-3. **Create** skill files in `skills/{project}/references/`
-4. **Create** `SKILL.md` index listing all skills
-5. **Create** `GENERATION.md` with the source git SHA
+- **Read** source docs from `sources/{project}/docs/`
+- **Read** the instructions in `instructions/{project}.md` for specific generation instructions if exists
+- **Understand** the documentation thoroughly
+- **Create** skill files in `skills/{project}/references/`
+- **Create** `SKILL.md` index listing all skills
+- **Create** `GENERATION.md` with the source git SHA
 
 #### Updating Generated Skills
 
@@ -98,8 +100,6 @@ For projects that **already maintain their own skills**. We clone their repo as 
 ### `SKILL.md`
 
 Index file listing all skills with brief descriptions:
-
-Categorize each references into `core`, `features`, `best-practices`, `advanced`, etc categories, and prefix the reference file name with the category.
 
 The version should be the date of the last sync.
 

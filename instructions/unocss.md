@@ -1,0 +1,1 @@
+- In the `SKILL.md`, mention about the agent should look for `uno.config.*` or `unocss.config.*` for config file to understand what presets and rules and shortcuts are available for user's project. If the agents didn't have a clear picture of the user's project setup, avoid using attributify mode and other advanced features, keep the basic `class` usage.

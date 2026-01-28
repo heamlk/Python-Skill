@@ -1,0 +1,2 @@
+- Prefer using TypeScript over JavaScript.
+- Prefer `<script setup lang="ts">` over `<script>`.

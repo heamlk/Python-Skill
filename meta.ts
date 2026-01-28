@@ -1,3 +1,8 @@
+export interface VendorSkillMeta {
+  official?: boolean
+  source: string
+  skills: Record<string, string> // sourceSkillName -> outputSkillName
+}
 
 /**
  * Repositories to clone as submodules and generate skills from source
@@ -12,14 +17,16 @@ export const submodules = {
 /**
  * Already generated skills, sync with their `skills/` directory
  */
-export const vendor = {
+export const vendors: Record<string, VendorSkillMeta> = {
   'slidev': {
+    official: true,
     source: 'https://github.com/slidevjs/slidev',
     skills: {
       'slidev': 'slidev'
     }
   },
   'vueuse': {
+    official: true,
     source: 'https://github.com/vueuse/skills',
     skills: {
       'vueuse-functions': 'vueuse'
