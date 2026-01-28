@@ -67,7 +67,7 @@ interface VendorConfig {
   skills: Record<string, string> // sourceSkillName -> outputSkillName
 }
 
-async function initSubmodules() {
+async function initSubmodules(skipPrompt = false) {
   const allProjects: Project[] = [
     ...Object.entries(submodules).map(([name, url]) => ({
       name,
@@ -96,10 +96,12 @@ async function initSubmodules() {
       p.log.message(`  - ${path}`)
     }
 
-    const shouldRemove = await p.confirm({
-      message: 'Remove these extra submodules?',
-      initialValue: true,
-    })
+    const shouldRemove = skipPrompt
+      ? true
+      : await p.confirm({
+          message: 'Remove these extra submodules?',
+          initialValue: true,
+        })
 
     if (p.isCancel(shouldRemove)) {
       p.cancel('Cancelled')
@@ -128,15 +130,17 @@ async function initSubmodules() {
     return
   }
 
-  const selected = await p.multiselect({
-    message: 'Select projects to initialize',
-    options: newProjects.map(project => ({
-      value: project,
-      label: `${project.name} (${project.type})`,
-      hint: project.url,
-    })),
-    initialValues: newProjects,
-  })
+  const selected = skipPrompt
+    ? newProjects
+    : await p.multiselect({
+        message: 'Select projects to initialize',
+        options: newProjects.map(project => ({
+          value: project,
+          label: `${project.name} (${project.type})`,
+          hint: project.url,
+        })),
+        initialValues: newProjects,
+      })
 
   if (p.isCancel(selected)) {
     p.cancel('Cancelled')
@@ -351,7 +355,7 @@ function getExistingSkillNames(): string[] {
     .map(entry => entry.name)
 }
 
-async function cleanup() {
+async function cleanup(skipPrompt = false) {
   const spinner = p.spinner()
   let hasChanges = false
 
@@ -381,10 +385,12 @@ async function cleanup() {
       p.log.message(`  - ${path}`)
     }
 
-    const shouldRemove = await p.confirm({
-      message: 'Remove these extra submodules?',
-      initialValue: true,
-    })
+    const shouldRemove = skipPrompt
+      ? true
+      : await p.confirm({
+          message: 'Remove these extra submodules?',
+          initialValue: true,
+        })
 
     if (p.isCancel(shouldRemove)) {
       p.cancel('Cancelled')
@@ -417,10 +423,12 @@ async function cleanup() {
       p.log.message(`  - skills/${name}`)
     }
 
-    const shouldRemove = await p.confirm({
-      message: 'Remove these extra skills?',
-      initialValue: true,
-    })
+    const shouldRemove = skipPrompt
+      ? true
+      : await p.confirm({
+          message: 'Remove these extra skills?',
+          initialValue: true,
+        })
 
     if (p.isCancel(shouldRemove)) {
       p.cancel('Cancelled')
@@ -451,12 +459,14 @@ async function cleanup() {
 }
 
 async function main() {
-  const [command] = process.argv.slice(2)
+  const args = process.argv.slice(2)
+  const skipPrompt = args.includes('-y') || args.includes('--yes')
+  const command = args.find(arg => !arg.startsWith('-'))
 
   // Handle subcommands directly
   if (command === 'init') {
     p.intro('Skills Manager - Init')
-    await initSubmodules()
+    await initSubmodules(skipPrompt)
     p.outro('Done')
     return
   }
@@ -477,12 +487,18 @@ async function main() {
 
   if (command === 'cleanup') {
     p.intro('Skills Manager - Cleanup')
-    await cleanup()
+    await cleanup(skipPrompt)
     p.outro('Done')
     return
   }
 
-  // No subcommand: show interactive menu
+  // No subcommand: show interactive menu (requires interaction)
+  if (skipPrompt) {
+    p.log.error('Command required when using -y flag')
+    p.log.info('Available commands: init, sync, check, cleanup')
+    process.exit(1)
+  }
+
   p.intro('Skills Manager')
 
   const action = await p.select({

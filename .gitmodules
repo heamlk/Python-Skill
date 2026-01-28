@@ -37,3 +37,6 @@
 [submodule "vendor/web-design-guidelines"]
 	path = vendor/web-design-guidelines
 	url = https://github.com/vercel-labs/agent-skills
+[submodule "sources/pinia"]
+	path = sources/pinia
+	url = https://github.com/vuejs/pinia

@@ -75,7 +75,7 @@ You don't need to do anything about them unless being asked.
 
 2. **Run sync script** to clone the submodule:
    ```bash
-   nr start init
+   nr start init -y
    ```
    This will clone the repository to `sources/{project}/`
 
