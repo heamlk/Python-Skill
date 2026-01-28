@@ -1,14 +1,11 @@
 ---
-name: antfu-app
+name: app-development
 description: Anthony Fu's preferences for building web applications with Vue, Vite/Nuxt, and UnoCSS
-metadata:
-  author: Anthony Fu
-  version: "2026.1.28"
 ---
 
-# Anthony Fu's App Development Preferences
+# App Development Preferences
 
-> This skill would be accompanied with `antfu-general` skill.
+Preferences for building web applications.
 
 ## Stack Overview
 

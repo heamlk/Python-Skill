@@ -24,9 +24,7 @@ Manually maintained by Anthony Fu with his preferred tools, setup conventions, a
 
 | Skill | Description |
 |-------|-------------|
-| [antfu-general](skills/antfu-general) | General skills for projects setup (eslint, pnpm, VitePress) |
-| [antfu-lib](skills/antfu-lib) | Library skills for library projects setup |
-| [antfu-app](skills/antfu-app) | Application skills for application projects setup (Vue, Nuxt, Vite) |
+| [antfu](skills/antfu) | Anthony Fu's preferences and best practices for app/library projects (eslint, pnpm, tsdown, Vue, Nuxt, Vite) |
 
 ### Skills Generated from Official Documentation
 
@@ -42,9 +40,6 @@ Generated from official documentation and fine-tuned by Anthony.
 | [unocss](skills/unocss) | UnoCSS - atomic CSS engine, presets, transformers | [unocss/unocss](https://github.com/unocss/unocss) |
 | [pnpm](skills/pnpm) | pnpm - fast, disk space efficient package manager | [pnpm/pnpm.io](https://github.com/pnpm/pnpm.io) |
 | [tsdown](skills/tsdown) | tsdown - TypeScript library bundler powered by Rolldown | [rolldown/tsdown](https://github.com/rolldown/tsdown) |
-
-> [!NOTE]
-> For contributors: since we use an LLM to generate and sync skills, you can add instructions in `instructions/{project}.md` to guide generation based on specific preferences. Directly modifying the generated skills is also supported—the LLM will respect manual changes when updating.
 
 ### Skills Vendored
 

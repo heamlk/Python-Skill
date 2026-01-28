@@ -15,7 +15,7 @@ export const submodules = {
   'pnpm': 'https://github.com/pnpm/pnpm.io',
   'tsdown': 'https://github.com/rolldown/tsdown',
   'vitest': 'https://github.com/vitest-dev/vitest',
-  'vitepress': 'https://github.com/vuejs/vitepress',
+  'vitepress': 'https://github.com/vuejs/vitepress'
 }
 
 /**
@@ -41,6 +41,12 @@ export const vendors: Record<string, VendorSkillMeta> = {
     skills: {
       'vue-best-practices': 'vue-best-practices'
     }
+  },
+  'turborepo': {
+    source: 'https://github.com/vercel/turborepo',
+    skills: {
+      'turborepo': 'turborepo'
+    }
   }
 }
 
@@ -48,7 +54,5 @@ export const vendors: Record<string, VendorSkillMeta> = {
  * Hand-written skills with Anthony Fu's preferences/tastes/recommendations
  */
 export const manual = [
-  'antfu-general',
-  'antfu-lib',
-  'antfu-app'
+  'antfu',
 ]

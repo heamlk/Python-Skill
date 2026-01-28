@@ -1,14 +1,9 @@
 ---
-name: antfu-lib
+name: library-development
 description: Anthony Fu's preferences for building and publishing JavaScript/TypeScript libraries
-metadata:
-  author: Anthony Fu
-  version: "2026.1.28"
 ---
 
-# Anthony Fu's Library Development Preferences
-
-> This skill would be accompanied with `antfu-general` skill.
+# Library Development Preferences
 
 Preferences for bundling and publishing TypeScript libraries.
 
@@ -70,12 +65,13 @@ Required fields for pure ESM library:
 ```json
 {
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
   "files": ["dist"],
   "scripts": {
     "build": "tsdown",
+    "prepack": "pnpm build",
     "test": "vitest",
     "release": "bumpp -r"
   }
@@ -84,13 +80,6 @@ Required fields for pure ESM library:
 
 The `exports` field is managed by tsdown when `exports: true`.
 
----
+### prepack Script
 
-## Testing
-
-Unit tests are preferred. Use Vitest with standard conventions:
-
-- Test files: `src/foo.ts` → `src/foo.test.ts` (co-located)
-- Integration tests: `test/` directory
-- Use `describe`/`it`, not `test`
-- Use `expect` for assertions
+For each public package, add `"prepack": "pnpm build"` to `scripts`. This ensures the package is automatically built before publishing (e.g., when running `npm publish` or `pnpm publish`). This prevents accidentally publishing stale or missing build artifacts.

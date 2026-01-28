@@ -1,12 +1,12 @@
 ---
-name: antfu-general
-description: Anthony Fu's general coding preferences and best practices for JavaScript/TypeScript projects
+name: antfu
+description: Anthony Fu's coding preferences and best practices for JavaScript/TypeScript projects
 metadata:
   author: Anthony Fu
   version: "2026.1.28"
 ---
 
-# Anthony Fu's General Preferences
+# Anthony Fu's Preferences
 
 This skill covers Anthony Fu's preferred tooling, configurations, and best practices for JavaScript/TypeScript projects.
 
@@ -204,8 +204,18 @@ Add script to `package.json`:
 
 ## References
 
+### Project Setup
+
 | Topic | Description | Reference |
 |-------|-------------|-----------|
 | @antfu/eslint-config | ESLint flat config for formatting and linting | [antfu-eslint-config](references/antfu-eslint-config.md) |
 | GitHub Actions | Preferred workflows using sxzz/workflows | [github-actions](references/github-actions.md) |
 | .gitignore | Preferred .gitignore for JS/TS projects | [gitignore](references/gitignore.md) |
+
+### Development
+
+| Topic | Description | Reference |
+|-------|-------------|-----------|
+| App Development | Preferences for Vue/Vite/Nuxt/UnoCSS web applications | [app-development](references/app-development.md) |
+| Library Development | Preferences for bundling and publishing TypeScript libraries | [library-development](references/library-development.md) |
+| Monorepo | pnpm workspaces, centralized alias, Turborepo | [monorepo](references/monorepo.md) |
