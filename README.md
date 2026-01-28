@@ -1,10 +1,10 @@
 # Anthony Fu's Skills
 
-A curated collection of [agent skills](https://agentskills.io/home) with [Anthony Fu](https://github.com/antfu)'s preferences, experience, tastes and best practices. Also includes the usage documentation for those tools.
+A curated collection of [agent skills](https://agentskills.io/home) reflecting [Anthony Fu](https://github.com/antfu)'s preferences, experience, and best practices, along with usage documentation for the tools.
 
 > [!IMPORTANT]
-> This is an proof-of-concept project for generating agent skills from source documentation and keep them syncing.
-> I haven't fully used/tested how well the skills would perform, so feedback and contributions are much appreciated.
+> This is a proof-of-concept project for generating agent skills from source documentation and keeping them in sync.
+> I haven't fully tested how well the skills perform in practice, so feedback and contributions are welcome.
 
 ## Installation
 
@@ -12,7 +12,7 @@ A curated collection of [agent skills](https://agentskills.io/home) with [Anthon
 npx skills add antfu/skills
 ```
 
-Learn more about the cli usage at [skills](https://github.com/vercel-labs/skills).
+Learn more about CLI usage at [skills](https://github.com/vercel-labs/skills).
 
 ## Skills
 
@@ -20,7 +20,7 @@ When installing `antfu/skills`, all the following skills will be included (you c
 
 ### Hand-maintained Skills
 
-Skills are maintained manually by Anthony Fu with his tools/setup preferences and best practices.
+Manually maintained by Anthony Fu with his preferred tools, setup conventions, and best practices.
 
 | Skill | Description |
 |-------|-------------|
@@ -30,7 +30,7 @@ Skills are maintained manually by Anthony Fu with his tools/setup preferences an
 
 ### Skills Generated from Official Documentation
 
-Skills generated from official documentation, and fine-tuned by Anthony.
+Generated from official documentation and fine-tuned by Anthony.
 
 | Skill | Description | Source |
 |-------|-------------|--------|
@@ -44,11 +44,11 @@ Skills generated from official documentation, and fine-tuned by Anthony.
 | [tsdown](skills/tsdown) | tsdown - TypeScript library bundler powered by Rolldown | [rolldown/tsdown](https://github.com/rolldown/tsdown) |
 
 > [!NOTE]
-> For contributors: since we use LLM to generate and sync the skills, we can write the instructions in the `instructions/{project}.md` to guide the LLM to generate the skills based on our preferences and focus. Also, directly modifying the generated skills is also possible as the LLM would respect the changes on updating.
+> For contributors: since we use an LLM to generate and sync skills, you can add instructions in `instructions/{project}.md` to guide generation based on specific preferences. Directly modifying the generated skills is also supported—the LLM will respect manual changes when updating.
 
 ### Skills Vendored
 
-Skills synced from vendor repositories for easier installation.
+Synced from external repositories for convenient installation.
 
 | Skill | Description | Source |
 |-------|-------------|--------|
@@ -60,4 +60,4 @@ Skills synced from vendor repositories for easier installation.
 
 Skills in this repository are [MIT](LICENSE.md) licensed.
 
-Synced skills from vendor repositories retain their original licenses - see each skill directory for details.
+Vendored skills from external repositories retain their original licenses - see each skill directory for details.
