@@ -12,7 +12,23 @@ export const submodules = {
 /**
  * Already generated skills, sync with their `skills/` directory
  */
-export const skills = {
-  'slidev': 'https://github.com/slidevjs/slidev',
-  'vueuse': 'https://github.com/vueuse/skills',
+export const vendor = {
+  'slidev': {
+    source: 'https://github.com/slidevjs/slidev',
+    skills: {
+      'slidev': 'slidev'
+    }
+  },
+  'vueuse': {
+    source: 'https://github.com/vueuse/skills',
+    skills: {
+      'vueuse-functions': 'vueuse'
+    }
+  },
+  'vue-best-practices': {
+    source: 'https://github.com/hyf0/vue-skills',
+    skills: {
+      'vue-best-practices': 'vue-best-practices'
+    }
+  }
 }

@@ -20,11 +20,12 @@ For OSS projects **without existing skills**. We clone the repo as a submodule a
 
 ### Type 2: Synced Skills (`vendor/`)
 
-For projects that **already maintain their own skills**. We clone their repo as a submodule and sync their skills to ours.
+For projects that **already maintain their own skills**. We clone their repo as a submodule and sync specified skills to ours.
 
 - **Projects:** Slidev, VueUse
-- **Workflow:** Pull updates → Copy skills
-- **Source:** `vendor/{project}/skills/`
+- **Workflow:** Pull updates → Copy specified skills (with optional renaming)
+- **Source:** `vendor/{project}/skills/{skill-name}/`
+- **Config:** Each vendor specifies which skills to sync and their output names in `meta.ts`
 
 ## Repository Structure
 
@@ -37,17 +38,19 @@ For projects that **already maintain their own skills**. We clone their repo as 
 │
 ├── vendor/                     # Type 2: Projects with existing skills (sync only)
 │   └── {project}/
-│       └── skills/             # Copy skills from here
+│       └── skills/
+│           └── {skill-name}/   # Individual skills to sync
 │
 └── skills/                     # Output directory (generated or synced)
-    └── {project}/
-        ├── SKILLS.md           # Index of all skills
-        ├── GENERATION.md       # Tracking metadata
+    └── {output-name}/
+        ├── SKILL.md           # Index of all skills
+        ├── GENERATION.md       # Tracking metadata (for generated skills)
+        ├── SYNC.md             # Tracking metadata (for synced skills)
         └── references/
             └── *.md            # Individual skill files
 ```
 
-**Important:** The `skills/{project}/` name must match `sources/{project}/` or `vendor/{project}/`.
+**Important:** For Type 1 (generated), the `skills/{project}/` name must match `sources/{project}/`. For Type 2 (synced), the output name is configured in `meta.ts` and may differ from the source skill name.
 
 ## Workflows
 
@@ -58,7 +61,7 @@ For projects that **already maintain their own skills**. We clone their repo as 
 1. **Read** source docs from `sources/{project}/docs/`
 2. **Understand** the documentation thoroughly
 3. **Create** skill files in `skills/{project}/references/`
-4. **Create** `SKILLS.md` index listing all skills
+4. **Create** `SKILL.md` index listing all skills
 5. **Create** `GENERATION.md` with the source git SHA
 
 #### Updating Generated Skills
@@ -75,50 +78,98 @@ For projects that **already maintain their own skills**. We clone their repo as 
 
 #### Initial Sync
 
-1. **Copy** all files from `vendor/{project}/skills/` to `skills/{project}/`
-2. **Create** `GENERATION.md` with the vendor git SHA
+1. **Copy** specified skills from `vendor/{project}/skills/{skill-name}/` to `skills/{output-name}/`
+2. **Create** `SYNC.md` with the vendor git SHA
 
 #### Updating Synced Skills
 
-1. **Check** git diff since the SHA recorded in `GENERATION.md`:
+1. **Check** git diff since the SHA recorded in `SYNC.md`:
    ```bash
    cd vendor/{project}
-   git diff {old-sha}..HEAD -- skills/
+   git diff {old-sha}..HEAD -- skills/{skill-name}/
    ```
-2. **Copy** changed files from `vendor/{project}/skills/` to `skills/{project}/`
-3. **Update** `GENERATION.md` with new SHA
+2. **Copy** changed files from `vendor/{project}/skills/{skill-name}/` to `skills/{output-name}/`
+3. **Update** `SYNC.md` with new SHA
 
 **Note:** Do NOT modify synced skills manually. Changes should be contributed upstream to the vendor project.
 
 ## File Formats
 
-### `SKILLS.md`
+### `SKILL.md`
 
 Index file listing all skills with brief descriptions:
 
-```markdown
-# {Project} Skills
+Categorize each references into `core`, `features`, `best-practices`, `advanced`, etc categories, and prefix the reference file name with the category.
 
-- [Reactivity](references/reactivity.md) - How reactivity system works
-- [Components](references/components.md) - Component basics and patterns
-- [Composables](references/composables.md) - Creating and using composables
+The version should be the date of the last sync.
+
+```markdown
+---
+name: {name}
+description: {description}
+metadata:
+  author: Anthony Fu
+  version: "2025.1.1"
+  source: Generated from {source-url}, scripts located at https://github.com/antfu/skills
+---
+
+// Some concise summary/context/introduction of the project
+
+## Core References
+
+| Topic | Description | Reference |
+|-------|-------------|-----------|
+| Markdown Syntax | Slide separators, frontmatter, notes, code blocks | [core-syntax](references/core-syntax.md) |
+| Animations | v-click, v-clicks, motion, transitions | [core-animations](references/core-animations.md) |
+| Headmatter | Deck-wide configuration options | [core-headmatter](references/core-headmatter.md) |
+
+## Features
+
+### Feature a
+
+| Topic | Description | Reference |
+|-------|-------------|-----------|
+| Feature A Editor | Description of feature a | [feature-a](references/feature-a-foo.md) |
+| Feature A Preview | Description of feature b | [feature-b](references/feature-a-bar.md) |
+
+### Feature b
+
+| Topic | Description | Reference |
+|-------|-------------|-----------|
+| Feature B | Description of feature b | [feature-b](references/feature-b-bar.md) |
+
+// ...
 ```
 
 ### `GENERATION.md`
 
-Tracking metadata for incremental updates:
+Tracking metadata for generated skills (Type 1):
 
 ```markdown
 # Generation Info
 
-- **Source:** `sources/{project}` or `vendor/{project}`
+- **Source:** `sources/{project}`
 - **Git SHA:** `abc123def456...`
 - **Generated:** 2024-01-15
 ```
 
+### `SYNC.md`
+
+Tracking metadata for synced skills (Type 2):
+
+```markdown
+# Sync Info
+
+- **Source:** `vendor/{project}/skills/{skill-name}`
+- **Git SHA:** `abc123def456...`
+- **Synced:** 2024-01-15
+```
+
 ### `references/*.md`
 
-Individual skill files. One concept per file.
+Individual skill files. One concept per file. 
+
+At the end of the file, include the reference links to the source documentation.
 
 ```markdown
 ---
@@ -138,6 +189,13 @@ Code examples and practical patterns.
 
 - Important detail 1
 - Important detail 2
+
+<!-- 
+Source references:
+- {source-url}
+- {source-url}
+- {source-url}
+-->
 ```
 
 ## Writing Guidelines

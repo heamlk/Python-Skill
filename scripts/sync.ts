@@ -3,7 +3,7 @@ import { cpSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, write
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import * as p from '@clack/prompts'
-import { skills, submodules } from '../meta'
+import { vendor, submodules } from '../meta'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -40,6 +40,11 @@ interface Project {
   path: string
 }
 
+interface VendorConfig {
+  source: string
+  skills: Record<string, string> // sourceSkillName -> outputSkillName
+}
+
 async function initSubmodules() {
   const allProjects: Project[] = [
     ...Object.entries(submodules).map(([name, url]) => ({
@@ -48,9 +53,9 @@ async function initSubmodules() {
       type: 'source' as const,
       path: `sources/${name}`,
     })),
-    ...Object.entries(skills).map(([name, url]) => ({
+    ...Object.entries(vendor).map(([name, config]) => ({
       name,
-      url,
+      url: (config as VendorConfig).source,
       type: 'vendor' as const,
       path: `vendor/${name}`,
     })),
@@ -121,63 +126,83 @@ async function syncSubmodules() {
   }
 
   // Sync Type 2 skills
-  const vendorProjects = Object.keys(skills)
-
-  for (const name of vendorProjects) {
-    const vendorPath = join(root, 'vendor', name)
+  for (const [vendorName, config] of Object.entries(vendor)) {
+    const vendorConfig = config as VendorConfig
+    const vendorPath = join(root, 'vendor', vendorName)
     const vendorSkillsPath = join(vendorPath, 'skills')
-    const outputPath = join(root, 'skills', name)
 
     if (!existsSync(vendorPath)) {
-      p.log.warn(`Vendor submodule not found: ${name}. Run init first.`)
+      p.log.warn(`Vendor submodule not found: ${vendorName}. Run init first.`)
       continue
     }
 
     if (!existsSync(vendorSkillsPath)) {
-      p.log.warn(`No skills directory in vendor/${name}/skills/`)
+      p.log.warn(`No skills directory in vendor/${vendorName}/skills/`)
       continue
     }
 
-    spinner.start(`Syncing skills: ${name}`)
+    // Sync each specified skill
+    for (const [sourceSkillName, outputSkillName] of Object.entries(vendorConfig.skills)) {
+      const sourceSkillPath = join(vendorSkillsPath, sourceSkillName)
+      const outputPath = join(root, 'skills', outputSkillName)
 
-    // Create output directory if it doesn't exist
-    if (!existsSync(outputPath)) {
-      mkdirSync(outputPath, { recursive: true })
-    }
-
-    // Copy all files from vendor skills to output
-    const files = readdirSync(vendorSkillsPath, { recursive: true, withFileTypes: true })
-    for (const file of files) {
-      if (file.isFile()) {
-        const fullPath = join(file.parentPath, file.name)
-        const relativePath = fullPath.replace(vendorSkillsPath, '')
-        const destPath = join(outputPath, relativePath)
-
-        // Ensure destination directory exists
-        const destDir = dirname(destPath)
-        if (!existsSync(destDir)) {
-          mkdirSync(destDir, { recursive: true })
-        }
-
-        cpSync(fullPath, destPath)
+      if (!existsSync(sourceSkillPath)) {
+        p.log.warn(`Skill not found: vendor/${vendorName}/skills/${sourceSkillName}`)
+        continue
       }
-    }
 
-    // Update GENERATION.md
-    const sha = getGitSha(vendorPath)
-    const generationPath = join(outputPath, 'GENERATION.md')
-    const date = new Date().toISOString().split('T')[0]
+      spinner.start(`Syncing skill: ${sourceSkillName} → ${outputSkillName}`)
 
-    const generationContent = `# Generation Info
+      // Remove existing output directory to ensure clean sync
+      if (existsSync(outputPath)) {
+        rmSync(outputPath, { recursive: true })
+      }
+      mkdirSync(outputPath, { recursive: true })
 
-- **Source:** \`vendor/${name}\`
+      // Copy all files from source skill to output
+      const files = readdirSync(sourceSkillPath, { recursive: true, withFileTypes: true })
+      for (const file of files) {
+        if (file.isFile()) {
+          const fullPath = join(file.parentPath, file.name)
+          const relativePath = fullPath.replace(sourceSkillPath, '')
+          const destPath = join(outputPath, relativePath)
+
+          // Ensure destination directory exists
+          const destDir = dirname(destPath)
+          if (!existsSync(destDir)) {
+            mkdirSync(destDir, { recursive: true })
+          }
+
+          cpSync(fullPath, destPath)
+        }
+      }
+
+      // Copy LICENSE file from vendor repo root if it exists
+      const licenseNames = ['LICENSE', 'LICENSE.md', 'LICENSE.txt', 'license', 'license.md', 'license.txt']
+      for (const licenseName of licenseNames) {
+        const licensePath = join(vendorPath, licenseName)
+        if (existsSync(licensePath)) {
+          cpSync(licensePath, join(outputPath, 'LICENSE.md'))
+          break
+        }
+      }
+
+      // Update SYNC.md (instead of GENERATION.md for vendored skills)
+      const sha = getGitSha(vendorPath)
+      const syncPath = join(outputPath, 'SYNC.md')
+      const date = new Date().toISOString().split('T')[0]
+
+      const syncContent = `# Sync Info
+
+- **Source:** \`vendor/${vendorName}/skills/${sourceSkillName}\`
 - **Git SHA:** \`${sha}\`
 - **Synced:** ${date}
 `
 
-    writeFileSync(generationPath, generationContent)
+      writeFileSync(syncPath, syncContent)
 
-    spinner.stop(`Synced: ${name}`)
+      spinner.stop(`Synced: ${sourceSkillName} → ${outputSkillName}`)
+    }
   }
 
   p.log.success('All skills synced')
@@ -211,14 +236,16 @@ async function checkUpdates() {
   }
 
   // Check vendors
-  for (const name of Object.keys(skills)) {
+  for (const [name, config] of Object.entries(vendor)) {
+    const vendorConfig = config as VendorConfig
     const path = join(root, 'vendor', name)
     if (!existsSync(path))
       continue
 
     const behind = execSafe('git rev-list HEAD..@{u} --count', path)
     if (behind && Number.parseInt(behind) > 0) {
-      updates.push({ name, type: 'vendor', behind: Number.parseInt(behind) })
+      const skillNames = Object.values(vendorConfig.skills).join(', ')
+      updates.push({ name: `${name} (${skillNames})`, type: 'vendor', behind: Number.parseInt(behind) })
     }
   }
 
