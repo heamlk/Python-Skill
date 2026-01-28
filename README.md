@@ -68,8 +68,16 @@ If you want to generate your own skill sets like this, you can use this project 
 
 See [AGENTS.md](AGENTS.md) for detailed generation guidelines.
 
+## Sponsors
+
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg">
+    <img src='https://cdn.jsdelivr.net/gh/antfu/static/sponsors.svg'/>
+  </a>
+</p>
+
 ## License
 
-Skills in this repository are [MIT](LICENSE.md) licensed.
+Skills and the scripts in this repository are [MIT](LICENSE.md) licensed.
 
 Vendored skills from external repositories retain their original licenses - see each skill directory for details.
