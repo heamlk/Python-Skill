@@ -12,17 +12,17 @@ A curated collection of [Agent Skills](https://agentskills.io/home) reflecting [
 pnpx skills add antfu/skills
 ```
 
-or to install it globally:
+or to install all of them globally:
 
 ```bash
-pnpx skills add antfu/skills -g
+pnpx skills add antfu/skills --all -g
 ```
 
 Learn more about the CLI usage at [skills](https://github.com/vercel-labs/skills).
 
 ## Skills
 
-When installing `antfu/skills`, all the following skills will be included (you can also select them in the CLI prompt).
+This collection is aim to be a one-stop collection of you are mainly working on Vite/Nuxt. It includes skills from different sources with different scopes.
 
 ### Hand-maintained Skills
 
@@ -36,7 +36,7 @@ Manually maintained by Anthony Fu with his preferred tools, setup conventions, a
 
 ### Skills Generated from Official Documentation
 
-> Unopinionated but with tilted focus 
+> Unopinionated but with tilted focus (e.g. TypeScript, ESM, Composition API, and other modern stacks)
 
 Generated from official documentation and fine-tuned by Anthony.
 
