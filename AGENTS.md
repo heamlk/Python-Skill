@@ -129,7 +129,7 @@ You don't need to do anything about them unless being asked.
 
 ### `SKILL.md`
 
-Index file listing all skills with brief descriptions:
+Index file listing all skills with brief descriptions. Name should be in `kebab-case`.
 
 The version should be the date of the last sync.
 

@@ -1,5 +1,5 @@
 ---
-name: UnoCSS
+name: unocss
 description: Instant on-demand atomic CSS engine - fully customizable, powerful, fast, and joyful
 metadata:
   author: Anthony Fu

@@ -1,5 +1,5 @@
 ---
-name: Vitest
+name: vitest
 description: A blazing fast unit testing framework powered by Vite
 metadata:
   author: Anthony Fu

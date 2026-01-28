@@ -1,5 +1,5 @@
 ---
-name: Vue
+name: vue
 description: Vue.js - The Progressive JavaScript Framework for building user interfaces
 metadata:
   author: Anthony Fu

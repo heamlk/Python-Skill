@@ -1,5 +1,5 @@
 ---
-name: VitePress
+name: vitepress
 description: Vite & Vue powered static site generator for building fast, content-centric websites
 metadata:
   author: Anthony Fu

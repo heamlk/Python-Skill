@@ -1,5 +1,5 @@
 ---
-name: Pinia
+name: pinia
 description: The intuitive store for Vue - type-safe, extensible, and modular state management
 metadata:
   author: Anthony Fu
