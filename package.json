@@ -2,12 +2,15 @@
   "private": true,
   "packageManager": "pnpm@10.28.2",
   "scripts": {
+    "lint": "eslint .",
     "sync": "tsx scripts/sync.ts",
     "prepare": "git submodule update --init --recursive"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^7.2.0",
     "@clack/prompts": "^0.11.0",
     "@types/node": "^25.0.10",
+    "eslint": "^9.39.2",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
   }

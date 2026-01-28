@@ -8,14 +8,14 @@ export interface VendorSkillMeta {
  * Repositories to clone as submodules and generate skills from source
  */
 export const submodules = {
-  'vue': 'https://github.com/vuejs/docs',
-  'nuxt': 'https://github.com/nuxt/nuxt',
-  'vite': 'https://github.com/vitejs/vite',
-  'unocss': 'https://github.com/unocss/unocss',
-  'pnpm': 'https://github.com/pnpm/pnpm.io',
-  'tsdown': 'https://github.com/rolldown/tsdown',
-  'vitest': 'https://github.com/vitest-dev/vitest',
-  'vitepress': 'https://github.com/vuejs/vitepress'
+  vue: 'https://github.com/vuejs/docs',
+  nuxt: 'https://github.com/nuxt/nuxt',
+  vite: 'https://github.com/vitejs/vite',
+  unocss: 'https://github.com/unocss/unocss',
+  pnpm: 'https://github.com/pnpm/pnpm.io',
+  tsdown: 'https://github.com/rolldown/tsdown',
+  vitest: 'https://github.com/vitest-dev/vitest',
+  vitepress: 'https://github.com/vuejs/vitepress',
 }
 
 /**
@@ -26,28 +26,28 @@ export const vendors: Record<string, VendorSkillMeta> = {
     official: true,
     source: 'https://github.com/slidevjs/slidev',
     skills: {
-      'slidev': 'slidev'
-    }
+      slidev: 'slidev',
+    },
   },
   'vueuse': {
     official: true,
     source: 'https://github.com/vueuse/skills',
     skills: {
-      'vueuse-functions': 'vueuse'
-    }
+      'vueuse-functions': 'vueuse',
+    },
   },
   'vue-best-practices': {
     source: 'https://github.com/hyf0/vue-skills',
     skills: {
-      'vue-best-practices': 'vue-best-practices'
-    }
+      'vue-best-practices': 'vue-best-practices',
+    },
   },
   'turborepo': {
     source: 'https://github.com/vercel/turborepo',
     skills: {
-      'turborepo': 'turborepo'
-    }
-  }
+      turborepo: 'turborepo',
+    },
+  },
 }
 
 /**

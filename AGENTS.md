@@ -180,7 +180,7 @@ Tracking metadata for synced skills (Type 2):
 
 ### `references/*.md`
 
-Individual skill files. One concept per file. 
+Individual skill files. One concept per file.
 
 At the end of the file, include the reference links to the source documentation.
 
@@ -203,7 +203,7 @@ Code examples and practical patterns.
 - Important detail 1
 - Important detail 2
 
-<!-- 
+<!--
 Source references:
 - {source-url}
 - {source-url}
