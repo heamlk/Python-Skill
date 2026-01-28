@@ -1,6 +1,6 @@
 # Anthony Fu's Skills
 
-A curated collection of [Agent Skills](https://agentskills.io/home) reflecting [Anthony Fu](https://github.com/antfu)'s preferences, experience, and best practices for modern web development.
+A curated collection of [Agent Skills](https://agentskills.io/home) reflecting [Anthony Fu](https://github.com/antfu)'s preferences, experience, and best practices, along with usage documentation for the tools.
 
 > [!IMPORTANT]
 > This is a proof-of-concept project for generating agent skills from source documentation and keeping them in sync.
@@ -9,13 +9,13 @@ A curated collection of [Agent Skills](https://agentskills.io/home) reflecting [
 ## Installation
 
 ```bash
-pnpx skills add antfu/skills --all
+pnpx skills add antfu/skills
 ```
 
 or to install it globally:
 
 ```bash
-pnpx skills add antfu/skills --all -g
+pnpx skills add antfu/skills -g
 ```
 
 Learn more about the CLI usage at [skills](https://github.com/vercel-labs/skills).
@@ -26,6 +26,8 @@ When installing `antfu/skills`, all the following skills will be included (you c
 
 ### Hand-maintained Skills
 
+> Opinionated
+
 Manually maintained by Anthony Fu with his preferred tools, setup conventions, and best practices.
 
 | Skill | Description |
@@ -33,6 +35,8 @@ Manually maintained by Anthony Fu with his preferred tools, setup conventions, a
 | [antfu](skills/antfu) | Anthony Fu's preferences and best practices for app/library projects (eslint, pnpm, vitest, vue, etc.) |
 
 ### Skills Generated from Official Documentation
+
+> Unopinionated but with tilted focus 
 
 Generated from official documentation and fine-tuned by Anthony.
 
