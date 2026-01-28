@@ -1,2 +1,3 @@
 - Prefer using TypeScript over JavaScript.
 - Prefer `<script setup lang="ts">` over `<script>`.
+- For performance reasons, prefer using `shallowRef` over `ref` if the deep reactivity is not used.
