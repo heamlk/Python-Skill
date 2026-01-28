@@ -20,6 +20,7 @@ This skill covers Anthony Fu's preferred tooling, configurations, and best pract
 | Linting & Formatting | @antfu/eslint-config (no Prettier) |
 | Testing | Vitest |
 | Git Hooks | simple-git-hooks + lint-staged |
+| Documentation | VitePress (in `docs/`) |
 
 ---
 
@@ -36,6 +37,18 @@ For monorepo setups, use pnpm workspaces:
 packages:
   - 'packages/*'
 ```
+
+
+Use pnpm named catalogs in `pnpm-workspace.yaml` to manage dependency versions:
+
+| Catalog | Purpose |
+|---------|---------|
+| `prod` | Production dependencies |
+| `inlined` | Dependencies inlined by bundler |
+| `dev` | Development tools (linter, bundler, testing, dev-server) |
+| `frontend` | Frontend libraries bundled into frontend |
+
+Catalog names are not limited to the above and can be adjusted based on needs. Avoid using default catalog.
 
 #### @antfu/ni
 
@@ -151,87 +164,6 @@ Use Vitest for unit testing.
 
 ## Project Setup
 
-### .gitignore
-
-When `.gitignore` is not present, create it with:
-
-```
-*.log
-*.tgz
-.cache
-.DS_Store
-.eslintcache
-.idea
-.env
-.nuxt
-.temp
-.output
-.turbo
-cache
-coverage
-dist
-lib-cov
-logs
-node_modules
-temp
-```
-
-### GitHub Actions
-
-When setting up a new project, add these workflows. Skip if workflows already exist.
-
-**`.github/workflows/autofix.yml`** - Auto-fix linting on PRs:
-
-```yaml
-name: autofix.ci
-
-on: [pull_request]
-
-jobs:
-  autofix:
-    uses: sxzz/workflows/.github/workflows/autofix.yml@v1
-    permissions:
-      contents: read
-```
-
-**`.github/workflows/unit-test.yml`** - Run tests on push/PR:
-
-```yaml
-name: Unit Test
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-permissions: {}
-
-jobs:
-  unit-test:
-    uses: sxzz/workflows/.github/workflows/unit-test.yml@v1
-```
-
-**`.github/workflows/release.yml`** - Publish on tag (library projects only):
-
-```yaml
-name: Release
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  release:
-    uses: sxzz/workflows/.github/workflows/release.yml@v1
-    with:
-      publish: true
-    permissions:
-      contents: write
-      id-token: write
-```
-
 ### Publishing (Library Projects)
 
 For library projects, publish through GitHub Releases triggered by `bumpp`:
@@ -244,6 +176,30 @@ For library projects, publish through GitHub Releases triggered by `bumpp`:
 }
 ```
 
+### Documentation (VitePress)
+
+Use VitePress for documentation. Place docs under `docs/` directory.
+
+```
+docs/
+├── .vitepress/
+│   └── config.ts
+├── index.md
+└── guide/
+    └── getting-started.md
+```
+
+Add script to `package.json`:
+
+```json
+{
+  "scripts": {
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs"
+  }
+}
+```
+
 ---
 
 ## References
@@ -251,3 +207,5 @@ For library projects, publish through GitHub Releases triggered by `bumpp`:
 | Topic | Description | Reference |
 |-------|-------------|-----------|
 | @antfu/eslint-config | ESLint flat config for formatting and linting | [antfu-eslint-config](references/antfu-eslint-config.md) |
+| GitHub Actions | Preferred workflows using sxzz/workflows | [github-actions](references/github-actions.md) |
+| .gitignore | Preferred .gitignore for JS/TS projects | [gitignore](references/gitignore.md) |

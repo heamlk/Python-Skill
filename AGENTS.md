@@ -2,6 +2,8 @@
 
 Generate [Agent Skills](https://agentskills.io/home) from project documentation with Anthony Fu's preferences.
 
+- Focus on agents capabilities and practical usage patterns. For user-facing guides, introductions, get-started, install guide, or common knowledge that LLM agents already know, you can skip those content.
+
 ## Skill Source Types
 
 There are two types of skill sources. The project lists are defined in `meta.ts`:

@@ -68,16 +68,6 @@ export default antfu({
 
 ### Vue
 
-Auto-detected. For Vue 2 (limited support):
-
-```js
-export default antfu({
-  vue: {
-    vueVersion: 2
-  },
-})
-```
-
 Vue accessibility:
 
 ```js
@@ -256,25 +246,6 @@ export default antfu()
     'old-prefix': 'new-prefix',
   })
 ```
-
-## Command Comments
-
-Powered by `eslint-plugin-command`. Use triple-slash comments for on-demand transforms:
-
-```ts
-/// to-function
-const foo = async (msg: string): void => {
-  console.log(msg)
-}
-// Transforms to function declaration on save/fix
-```
-
-Available commands:
-- `/// to-function` - Arrow to function declaration
-- `/// to-arrow` - Function to arrow
-- `/// to-for-each` - Loop to `.forEach()`
-- `/// to-for-of` - `.forEach()` to for-of
-- `/// keep-sorted` - Sort object/array/interface
 
 ## Less Opinionated Mode
 
