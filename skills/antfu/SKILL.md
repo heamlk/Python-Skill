@@ -118,7 +118,7 @@ Add script to `package.json`:
 }
 ```
 
-When getting linting errors, try to fix them with `nr lint --fix`.
+When getting linting errors, try to fix them with `nr lint --fix`. Don't add `lint:fix` script.
 
 ### Git Hooks (simple-git-hooks + lint-staged)
 
