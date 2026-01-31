@@ -1,128 +1,264 @@
 ---
-name: vue-new-apis
-description: Vue 3.4+ and 3.5+ APIs - defineModel, reactive destructure, useTemplateRef, onWatcherCleanup
+name: core-new-apis
+description: Vue 3 reactivity system, lifecycle hooks, and composable patterns
 ---
 
-# New Vue APIs (3.4+, 3.5+)
+# Reactivity, Lifecycle & Composables
 
-## defineModel() (3.4+)
+## Reactivity
 
-```vue
-<script setup lang="ts">
-const model = defineModel<string>()
-</script>
-
-<template>
-  <input v-model="model" />
-</template>
-```
-
-### Named v-model
-
-```vue
-<script setup lang="ts">
-const firstName = defineModel<string>('firstName')
-const lastName = defineModel<string>('lastName')
-</script>
-```
-
-```vue-html
-<UserName v-model:first-name="first" v-model:last-name="last" />
-```
-
-### Modifiers
-
-```vue
-<script setup lang="ts">
-const [model, modifiers] = defineModel<string>({
-  set(value) {
-    return modifiers.capitalize
-      ? value.charAt(0).toUpperCase() + value.slice(1)
-      : value
-  }
-})
-</script>
-```
-
-### Typing
+### ref vs shallowRef
 
 ```ts
-const model = defineModel<string>()                           // Ref<string | undefined>
-const model = defineModel<string>({ required: true })         // Ref<string>
-const [model, mods] = defineModel<string, 'trim' | 'cap'>()   // mods: Record<..., true | undefined>
+import { ref, shallowRef } from 'vue'
+
+// ref - deep reactivity (tracks nested changes)
+const user = ref({ name: 'John', profile: { age: 30 } })
+user.value.profile.age = 31  // Triggers reactivity
+
+// shallowRef - only .value assignment triggers reactivity (better performance)
+const data = shallowRef({ items: [] })
+data.value.items.push('new')  // Does NOT trigger reactivity
+data.value = { items: ['new'] }  // Triggers reactivity
 ```
 
-## Reactive Props Destructure (3.5+)
+**Prefer `shallowRef`** for large data structures or when deep reactivity is unnecessary.
 
-```vue
-<script setup lang="ts">
-const { msg = 'hello', count = 0 } = defineProps<{
-  msg?: string
-  count?: number
-}>()
-
-watchEffect(() => console.log(msg, count)) // reactive
-```
-
-### Passing to watchers/composables
+### computed
 
 ```ts
-const { foo } = defineProps(['foo'])
+import { ref, computed } from 'vue'
 
-watch(() => foo, callback)      // ✅ wrap in getter
-useComposable(() => foo)        // ✅ wrap in getter
-watch(foo, callback)            // ❌ passes value, not reactive
-```
+const count = ref(0)
 
-## onWatcherCleanup (3.5+)
+// Read-only computed
+const doubled = computed(() => count.value * 2)
 
-```ts
-import { watch, onWatcherCleanup } from 'vue'
-
-watch(id, async (newId) => {
-  const controller = new AbortController()
-  fetch(`/api/${newId}`, { signal: controller.signal })
-  onWatcherCleanup(() => controller.abort())
+// Writable computed
+const plusOne = computed({
+  get: () => count.value + 1,
+  set: (val) => { count.value = val - 1 }
 })
 ```
 
-## Pause/Resume Watchers (3.5+)
+### reactive & readonly
 
 ```ts
-const { stop, pause, resume } = watchEffect(() => { /* ... */ })
+import { reactive, readonly } from 'vue'
+
+const state = reactive({ count: 0, nested: { value: 1 } })
+state.count++  // Reactive
+
+const readonlyState = readonly(state)
+readonlyState.count++  // Warning, mutation blocked
 ```
 
-## useTemplateRef (3.5+)
+Note: `reactive()` loses reactivity on destructuring. Use `ref()` or `toRefs()`.
 
-```vue
-<script setup lang="ts">
-import { useTemplateRef, onMounted } from 'vue'
+## Watchers
 
-const inputRef = useTemplateRef<HTMLInputElement>('input')
-onMounted(() => inputRef.value?.focus())
-</script>
-
-<template>
-  <input ref="input" />
-</template>
-```
-
-### Component refs
+### watch
 
 ```ts
-type ChildInstance = InstanceType<typeof Child>
-const childRef = useTemplateRef<ChildInstance>('child')
-```
+import { ref, watch } from 'vue'
 
-## watch once (3.4+)
+const count = ref(0)
 
-```ts
+// Watch single ref
+watch(count, (newVal, oldVal) => {
+  console.log(`Changed from ${oldVal} to ${newVal}`)
+})
+
+// Watch getter
+watch(
+  () => props.id,
+  (id) => fetchData(id),
+  { immediate: true }
+)
+
+// Watch multiple sources
+watch([firstName, lastName], ([first, last]) => {
+  fullName.value = `${first} ${last}`
+})
+
+// Deep watch with depth limit (Vue 3.5+)
+watch(state, callback, { deep: 2 })
+
+// Once (Vue 3.4+)
 watch(source, callback, { once: true })
+```
+
+### watchEffect
+
+Runs immediately and auto-tracks dependencies.
+
+```ts
+import { ref, watchEffect, onWatcherCleanup } from 'vue'
+
+const id = ref(1)
+
+watchEffect(async () => {
+  const controller = new AbortController()
+  
+  // Cleanup on re-run or unmount (Vue 3.5+)
+  onWatcherCleanup(() => controller.abort())
+  
+  const res = await fetch(`/api/${id.value}`, { signal: controller.signal })
+  data.value = await res.json()
+})
+
+// Pause/resume (Vue 3.5+)
+const { pause, resume, stop } = watchEffect(() => {})
+pause()
+resume()
+stop()
+```
+
+### Flush Timing
+
+```ts
+// 'pre' (default) - before component update
+// 'post' - after component update (access updated DOM)
+// 'sync' - immediate, use with caution
+
+watch(source, callback, { flush: 'post' })
+watchPostEffect(() => {})  // Alias for flush: 'post'
+```
+
+## Lifecycle Hooks
+
+```ts
+import {
+  onBeforeMount,
+  onMounted,
+  onBeforeUpdate,
+  onUpdated,
+  onBeforeUnmount,
+  onUnmounted,
+  onErrorCaptured,
+  onActivated,      // KeepAlive
+  onDeactivated,    // KeepAlive
+  onServerPrefetch  // SSR only
+} from 'vue'
+
+onMounted(() => {
+  console.log('DOM is ready')
+})
+
+onUnmounted(() => {
+  // Cleanup timers, listeners, etc.
+})
+
+// Error boundary
+onErrorCaptured((err, instance, info) => {
+  console.error(err)
+  return false  // Stop propagation
+})
+```
+
+## Effect Scope
+
+Group reactive effects for batch disposal.
+
+```ts
+import { effectScope, onScopeDispose } from 'vue'
+
+const scope = effectScope()
+
+scope.run(() => {
+  const count = ref(0)
+  const doubled = computed(() => count.value * 2)
+  
+  watch(count, () => console.log(count.value))
+  
+  // Cleanup when scope stops
+  onScopeDispose(() => {
+    console.log('Scope disposed')
+  })
+})
+
+// Dispose all effects
+scope.stop()
+```
+
+## Composables
+
+Composables are functions that encapsulate stateful logic using Composition API.
+
+### Naming Convention
+
+- Start with `use`: `useMouse`, `useFetch`, `useCounter`
+
+### Pattern
+
+```ts
+// composables/useMouse.ts
+import { ref, onMounted, onUnmounted } from 'vue'
+
+export function useMouse() {
+  const x = ref(0)
+  const y = ref(0)
+
+  const update = (e: MouseEvent) => {
+    x.value = e.pageX
+    y.value = e.pageY
+  }
+
+  onMounted(() => window.addEventListener('mousemove', update))
+  onUnmounted(() => window.removeEventListener('mousemove', update))
+
+  return { x, y }
+}
+```
+
+### Accept Reactive Input
+
+Use `toValue()` (Vue 3.3+) to normalize refs, getters, or plain values.
+
+```ts
+import { ref, watchEffect, toValue, type MaybeRefOrGetter } from 'vue'
+
+export function useFetch(url: MaybeRefOrGetter<string>) {
+  const data = ref(null)
+  const error = ref(null)
+
+  watchEffect(async () => {
+    data.value = null
+    error.value = null
+    
+    try {
+      const res = await fetch(toValue(url))
+      data.value = await res.json()
+    } catch (e) {
+      error.value = e
+    }
+  })
+
+  return { data, error }
+}
+
+// Usage - all work:
+useFetch('/api/users')
+useFetch(urlRef)
+useFetch(() => `/api/users/${props.id}`)
+```
+
+### Return Refs (Not Reactive)
+
+Always return plain object with refs for destructuring compatibility.
+
+```ts
+// Good - preserves reactivity when destructured
+return { x, y }
+
+// Bad - loses reactivity when destructured
+return reactive({ x, y })
 ```
 
 <!--
 Source references:
-- https://vuejs.org/api/sfc-script-setup.html#definemodel
-- https://vuejs.org/guide/components/v-model.html
-- https://vuejs.org/guide/essentials/watchers.html
+- https://vuejs.org/api/reactivity-core.html
+- https://vuejs.org/api/reactivity-advanced.html
+- https://vuejs.org/api/composition-api-lifecycle.html
+- https://vuejs.org/guide/reusability/composables.html
 -->
